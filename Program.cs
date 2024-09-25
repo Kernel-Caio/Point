@@ -10,7 +10,7 @@ namespace FolhaPontos
             string data = dateTimeCurrent.Date.ToString("dd/MM/yyyy");
 
             Registro registro= new Registro();
-            registro.RegistroData(data);
+            registro.ListaRegistros();
         }
     }
 }

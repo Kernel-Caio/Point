@@ -51,12 +51,37 @@ namespace ManagerEmployee
             db.Desconectar();
         }
 
+        // Lista todos registros de uma data
         public void RegistroData(string data)
         {
             List<Registro> lista_registros = new List<Registro>();
             DB db = new DB();
 
             lista_registros = db.ListaRegistrosPorData(data);
+            
+            foreach (Registro registro in lista_registros)
+            {
+                Console.WriteLine($"{registro.id_registro}, {registro.data}, {registro.hora}, {registro.status}, {registro.id_funcionario}");
+            }
+
+            db.Desconectar();
+        }
+
+        //Deleta o registro de uma data
+        public void DeletePoint(string data)
+        {
+            DB db = new DB();
+            db.DeleteLastPoint(data);
+            db.Desconectar();
+        }
+
+        // Lista todos registros
+        public void ListaRegistros()
+        {
+            List<Registro> lista_registros = new List<Registro>();
+            DB db = new DB();
+
+            lista_registros = db.ListaTodosRegistros();
             
             foreach (Registro registro in lista_registros)
             {

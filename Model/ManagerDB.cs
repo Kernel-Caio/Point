@@ -157,5 +157,61 @@ namespace ManagerDB
             conn.Close();
             conn.Dispose();
         }
+
+        public void DeleteLastPoint(string data)
+        {
+            int id_registro = 0;
+
+            using(var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT id FROM Registros " +
+                    "WHERE data = @data;";
+                cmd.Parameters.AddWithValue("@data", data);
+                
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        id_registro = reader.GetInt32(0);
+                    }
+                }
+
+                cmd.CommandText = @"DELETE FROM Registros " +
+                    "WHERE id = @id;";
+                cmd.Parameters.AddWithValue("@id", id_registro);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public List<Registro> ListaTodosRegistros()
+        {
+            List<Registro> lista_registros = new List<Registro>();
+            int qtd_registros = 0;
+
+            using(var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT * FROM Registros;";
+
+                using(var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Registro registro = new Registro();
+                        qtd_registros++;
+
+                        registro.id_registro = reader.GetInt32(0);
+                        registro.data = reader.GetString(1);
+                        registro.hora = reader.GetString(2);
+                        registro.status = reader.GetString(3);
+                        registro.id_funcionario = reader.GetInt32(4);
+
+                        lista_registros.Add(registro);
+                    }
+
+                    if (qtd_registros == 0) { Console.WriteLine("Nenhum registro"); }
+                }
+            }
+            return lista_registros;
+        }
     }
 }
