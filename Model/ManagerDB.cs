@@ -1,4 +1,6 @@
 using System.Data.SQLite;
+using System.Runtime.CompilerServices;
+using ManagerEmployee;
 
 namespace ManagerDB
 {
@@ -55,7 +57,7 @@ namespace ManagerDB
         }
 
         // Bate o ponto de um funcionario pelo id
-        public void RegisterPoint(string id){
+        public void RegisterPoint(int id){
             bool validador = false; //Verifica se o id passado é existente
             string status = string.Empty; //Diz se o registro se trata de uma entrada ou saida
             int qtd_registros = 0; //Verifica quantos vezes a pessoa bateu ponto hoje
@@ -116,6 +118,44 @@ namespace ManagerDB
                 cmd.Parameters.AddWithValue("nome", nome);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public List<Registro> ListaRegistrosPorData(string data)
+        {
+            List<Registro> lista_registros = new List<Registro>();
+            int qtd_registros = 0;
+
+            using(var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT * FROM Registros WHERE data = @data;";
+                cmd.Parameters.AddWithValue("@data", data);
+
+                using(var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Registro registro = new Registro();
+                        qtd_registros++;
+
+                        registro.id_registro = reader.GetInt32(0);
+                        registro.data = reader.GetString(1);
+                        registro.hora = reader.GetString(2);
+                        registro.status = reader.GetString(3);
+                        registro.id_funcionario = reader.GetInt32(4);
+
+                        lista_registros.Add(registro);
+                    }
+
+                    if (qtd_registros == 0) { Console.WriteLine("Nenhum registro"); }
+                }
+            }
+            return lista_registros;
+        }
+
+        public void Desconectar()
+        {
+            conn.Close();
+            conn.Dispose();
         }
     }
 }

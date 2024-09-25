@@ -23,13 +23,7 @@ namespace ManagerEmployee
         {
             DB db = new DB();
             db.EmployeeRegistration(this.nome, this.cpf, this.pix, this.telefone);
-        }
-
-        // Registra um ponto de entrada ou saida do funcionario
-        public void Point(string id)
-        {
-            DB db = new DB();
-            db.RegisterPoint(id);
+            db.Desconectar();
         }
 
         // Deleta o Cadastro de um funcionario
@@ -37,6 +31,39 @@ namespace ManagerEmployee
         {
             DB db = new DB();
             db.DeleteEmployeeRegistration(nome);
+            db.Desconectar();
+        }
+    }
+
+    public class Registro
+    {
+        public int? id_registro { get; set;} = null;
+        public string data { get; set;} = string.Empty;
+        public string hora { get; set;} = string.Empty;
+        public string status { get; set;} = string.Empty;
+        public int? id_funcionario { get; set;} = null;
+
+        // Registra um ponto de entrada ou saida do funcionario
+        public void Point(int id)
+        {
+            DB db = new DB();
+            db.RegisterPoint(id);
+            db.Desconectar();
+        }
+
+        public void RegistroData(string data)
+        {
+            List<Registro> lista_registros = new List<Registro>();
+            DB db = new DB();
+
+            lista_registros = db.ListaRegistrosPorData(data);
+            
+            foreach (Registro registro in lista_registros)
+            {
+                Console.WriteLine($"{registro.id_registro}, {registro.data}, {registro.hora}, {registro.status}, {registro.id_funcionario}");
+            }
+
+            db.Desconectar();
         }
     }
 }

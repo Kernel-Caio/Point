@@ -6,8 +6,11 @@ namespace FolhaPontos
     {
         public static void Main()
         {
-            Funcionario funcionario = new Funcionario();
-            funcionario.Point("3");
+            DateTime dateTimeCurrent = DateTime.Now;
+            string data = dateTimeCurrent.Date.ToString("dd/MM/yyyy");
+
+            Registro registro= new Registro();
+            registro.RegistroData(data);
         }
     }
 }
